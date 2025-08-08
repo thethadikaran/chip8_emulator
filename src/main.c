@@ -17,7 +17,8 @@ int main(int argc, char *argv[]) {
   // emulator loop
   while (emulator.state != STOP) {
     // handle user inputs
-    
+    handle_inputs(&emulator);
+
     // entering debug mode
     if (emulator.state == PAUSED) continue;
 

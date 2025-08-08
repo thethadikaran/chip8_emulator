@@ -73,6 +73,10 @@ bool set_config(config_t *, int, char **);
 
 bool emulator_init(emulator_t *, config_t *);
 
+void handle_inputs(emulator_t *);
+
+void handle_keydown_events(emulator_t *, SDL_Event *);
+
 /* ----- GRAPHICS ---------------------------*/
 bool sdl_init(sdlc_t *);
 

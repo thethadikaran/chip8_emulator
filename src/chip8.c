@@ -73,6 +73,62 @@ bool emulator_init(emulator_t *emulator, config_t *config) {
 
 
 
+void handle_inputs(emulator_t *emulator) {
+  // SDL_PollEvent() pops the event from the event queue and load it into the
+  // passed in SDL_Event struct. Returns 0 if no events in event queue else 1
+  SDL_Event key_event;
+
+  while (SDL_PollEvent(&key_event)) {
+    // identify the type of the event :- like quit, keypress, mouse scroll
+    // after knowing the type, use another switch to know the action
+    switch (key_event.type) {
+      case SDL_QUIT:        // quit requested event
+        emulator->state = STOP;
+        return;
+
+      case SDL_KEYDOWN:     // keypad key is pressed
+        handle_keydown_events(emulator, &key_event);
+        break;
+
+      case SDL_KEYUP:       // keypad key is released
+        break;
+    }
+
+  }
+
+}
+
+
+/**
+ * @brief Handle the key press in the keyboard
+ * SDL_KeyboardEvent -> https://wiki.libsdl.org/SDL2/SDL_KeyboardEvent
+ * SDL_Keysym -> https://wiki.libsdl.org/SDL2/SDL_Keysym
+ * SDL_Keycode -> https://github.com/libsdl-org/SDL/blob/SDL2/include/SDL_keycode.h
+ * 
+ * @param emulator - emulator_t struct
+ * @param key_event - SDL_Event struct, where key events are placed
+ */
+void handle_keydown_events(emulator_t *emulator, SDL_Event *key_event) {
+  switch (key_event->key.keysym.sym) {
+    case SDLK_ESCAPE:     // ESC key pressed
+      emulator->state = STOP;
+      return;
+
+    case SDLK_SPACE:     // SPACE key pressed
+      emulator->state = emulator->state == RUNNING ? PAUSED : RUNNING;
+
+      if (emulator->state == PAUSED)
+        puts("=== ENTERING DEBUG MODE ===");
+      else 
+        puts("=== EXIT DEBUG MODE ===");
+      return;
+
+  }
+
+}
+
+
+
 bool load_rom(emulator_t *emulator) {
   // open the ROM
   FILE *rom = fopen(emulator->rom_path, "rb");    // reading the binary ROM file
