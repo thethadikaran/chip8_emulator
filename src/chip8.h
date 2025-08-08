@@ -20,6 +20,10 @@
 #define HEIGHT          32        // which totals to 2048 pixels
 
 
+// fonts defined in chip8.c file
+extern const uint8_t fontset[];
+
+
 /* enum to represent the emulator state */
 typedef enum { STOP, RUNNING, PAUSED } emulator_state_t;
 
@@ -42,10 +46,9 @@ typedef struct {
   bool display[WIDTH * HEIGHT];// each bit represent state of single pixel
                                // array act as a display buffer for storing graphics
 
-  char *rom;                   // ROM file - instructions
+  char *rom_path;              // ROM file path
   emulator_state_t state;      // state of the emulator
 } emulator_t;
-
 
 
 /* struct to hold the SDL components */
@@ -55,6 +58,10 @@ typedef struct {
 } sdlc_t;
 
 
+/* struct to hold the config parameters */
+typedef struct {
+  char *rom_path;
+} config_t;
 
 
 /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
@@ -62,11 +69,21 @@ typedef struct {
 /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
 
 /* ----- CHIP8 ------------------------------*/
+bool set_config(config_t *, int, char **);
+
+bool emulator_init(emulator_t *, config_t *);
 
 /* ----- GRAPHICS ---------------------------*/
 bool sdl_init(sdlc_t *);
 
+void update_screen(const sdlc_t *);
+
+void sdl_free(sdlc_t *);
+
 /* ----- UTILS ------------------------------*/
+size_t rom_size(FILE *);
+
+bool load_rom(emulator_t *);
 
 
 
