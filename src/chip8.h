@@ -28,6 +28,32 @@ extern const uint8_t fontset[];
 typedef enum { STOP, RUNNING, PAUSED } emulator_state_t;
 
 
+/* struct to hold the SDL components */
+typedef struct {
+  SDL_Window *win;        // main window
+  SDL_Renderer *render;   // 2D renderer
+} sdlc_t;
+
+
+/* struct to hold the config parameters */
+typedef struct {
+  char *rom_path;
+} config_t;
+
+
+/* struct to hold a single parsed instruction */
+typedef struct {
+  uint16_t opcode;         // 16 bits
+
+  uint8_t instruction;     // 4 bits
+  uint8_t x;               // 4 bits
+  uint8_t y;               // 4 bits
+  uint8_t n;               // 4 bits
+  uint8_t nn;              // 8 bits
+  uint16_t nnn;            // 12 bits
+} opcode_t;
+
+
 /* struct to describe the emulator configurations */
 typedef struct {
   uint8_t V[DATA_REGISTER];     // data register - V0 to VF
@@ -47,21 +73,9 @@ typedef struct {
                                // array act as a display buffer for storing graphics
 
   char *rom_path;              // ROM file path
+  opcode_t instruction;        // current instruction being executed
   emulator_state_t state;      // state of the emulator
 } emulator_t;
-
-
-/* struct to hold the SDL components */
-typedef struct {
-  SDL_Window *win;        // main window
-  SDL_Renderer *render;   // 2D renderer
-} sdlc_t;
-
-
-/* struct to hold the config parameters */
-typedef struct {
-  char *rom_path;
-} config_t;
 
 
 /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
@@ -76,6 +90,11 @@ bool emulator_init(emulator_t *, config_t *);
 void handle_inputs(emulator_t *);
 
 void handle_keydown_events(emulator_t *, SDL_Event *);
+
+/* ----- INSTRUCTIONS ------------------------*/
+void parse_opcode(emulator_t *);
+
+void emulate_instructions(emulator_t *);
 
 /* ----- GRAPHICS ---------------------------*/
 bool sdl_init(sdlc_t *);

@@ -99,6 +99,7 @@ void handle_inputs(emulator_t *emulator) {
 }
 
 
+
 /**
  * @brief Handle the key press in the keyboard
  * SDL_KeyboardEvent -> https://wiki.libsdl.org/SDL2/SDL_KeyboardEvent

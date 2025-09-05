@@ -16,6 +16,7 @@ find_package(SDL2 REQUIRED)
 set(SOURCES
         src/chip8.c
         src/graphics.c
+        src/instructions.c
         src/main.c
 )
 
